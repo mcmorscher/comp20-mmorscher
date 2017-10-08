@@ -14,7 +14,72 @@
 <div id="lyrics"></div>
 
 <script>
-	// Complete this section and create a CSS file named style.css
+    lyrics_elem = document.getElementById("lyrics");
+	vid_elem = document.getElementById("a_classic");
+    vid_elem.addEventListener("timeupdate", function(){displayLyrics()});
+    
+    function displayLyrics() {
+        
+        if  (vid_elem.currentTime < 9 || 
+            (vid_elem.currentTime >= 72 && vid_elem.currentTime < 80) || 
+            (vid_elem.currentTime >= 126 && vid_elem.currentTime < 135) || 
+            (vid_elem.currentTime >= 150 && vid_elem.currentTime < 158)){
+            lyrics_elem.innerHTML = "<p></p>";
+        }    
+        else if (vid_elem.currentTime >= 9 && vid_elem.currentTime < 25) {
+            lyrics_elem.innerHTML = "<p> Children have You ever met the Bogeyman before </p> \
+            <p>No, of course You haven't for You're much too good, I'm sure; </p> \
+            <p>Don't You be afraid of him if he should visit You, </p> \
+            <p>He's a great big coward, so I'll tell You what to do </p>";
+        }
+        else if (vid_elem.currentTime >= 25 && vid_elem.currentTime < 41) {
+            lyrics_elem.innerHTML = "<p> Hush, hush, hush, here comes the Bogeyman, </p> \
+            <p>Don't let him come too close to You, he'll catch you if he can. </p> \
+            <p>Just pretend that you're a crocodile </p> \
+            <p>And you will find that Bogeyman will run away a mile. </p>";
+        }
+        else if (vid_elem.currentTime >= 41 && vid_elem.currentTime < 56) {
+            lyrics_elem.innerHTML = "<p> Say Shoo shoo and stick him with a pin </p> \
+            <p>Bogeyman will very nearly jump out of his skin </p> \
+            <p>Say buzz buzz just like the wasps that sting </p> \
+            <p>Bogeyman will think you are an elephant with wings </p>";
+        }
+        else if (vid_elem.currentTime >= 56 && vid_elem.currentTime < 72) {
+            lyrics_elem.innerHTML = "<p> Hush, hush, hush, here comes the Bogeyman </p> \
+            <p>Tell him you've got soldiers in your bed </p> \
+            <p>For he will never guess that they are only made of lead </p>";
+        }
+        else if (vid_elem.currentTime >= 80 && vid_elem.currentTime < 95) {
+            lyrics_elem.innerHTML = "<p> Say Hush hush, he'll think that you're asleep </p> \
+            <p>If you make a lovely snore away he'll softly creep </p> \
+            <p>Sing this tune you children one and all </p> \
+            <p>Bogeyman will run away, he'll think it's Henry Hall! </p>";
+        }
+        else if (vid_elem.currentTime >= 95 && vid_elem.currentTime < 110) {
+            lyrics_elem.innerHTML = "<p> When the shadows of the evening creep across the sky </p> \
+            <p>And your Mummy comes upstairs to sing a lullaby </p> \
+            <p>Tell her that the bogeyman no longer frightens you </p> \
+            <p>Uncle Henry's very kindly told you what to do </p>";
+        }
+        else if (vid_elem.currentTime >= 110 && vid_elem.currentTime < 126) {
+            lyrics_elem.innerHTML = "<p> Hush, hush, hush, here comes the Bogeyman </p> \
+            <p>Don't let him come too close to you, He'll catch you if he can. </p> \
+            <p>Just pretend your teddy bear's a dog </p> \
+            <p>Then shout out, 'Fetch him, Teddy!' and he'll hop off like a frog. </p>";
+        }
+        else if (vid_elem.currentTime >= 135 && vid_elem.currentTime < 150) {
+            lyrics_elem.innerHTML = "<p> Say Meoow, pretend that you're a cat </p> \
+            <p>He'll think you may scratch him that make him fall down flat </p> \
+            <p>Just pretend he isn't really there </p> \
+            <p>You will find that Bogey man will vanish in thin air </p>";
+        }
+        else if (vid_elem.currentTime >= 158) {
+            lyrics_elem.innerHTML = "<p> Here's one way to catch him without fail </p> \
+            <p>Just keep a little salt with you </p> \
+            <p>and put it on his tail </p>";
+        }
+    }
+    
 </script>
 </body>
 </html>
