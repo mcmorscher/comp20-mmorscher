@@ -19,12 +19,14 @@
     vid_elem.addEventListener("timeupdate", function(){displayLyrics()});
     
     function displayLyrics() {
+        // Display no lyrics during instrumental segments
         if  (vid_elem.currentTime < 9 || 
             (vid_elem.currentTime >= 72 && vid_elem.currentTime < 80) || 
             (vid_elem.currentTime >= 126 && vid_elem.currentTime < 135) || 
             (vid_elem.currentTime >= 150 && vid_elem.currentTime < 158)){
             lyrics_elem.innerHTML = "<p></p>";
         }    
+        // Display the appropriate lyrics at other times, based on the video's current time
         else if (vid_elem.currentTime >= 9 && vid_elem.currentTime < 25) {
             lyrics_elem.innerHTML = "<p> Children have You ever met the Bogeyman before </p> \
             <p>No, of course You haven't for You're much too good, I'm sure; </p> \
