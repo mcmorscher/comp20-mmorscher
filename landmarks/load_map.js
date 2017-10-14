@@ -3,6 +3,11 @@ var myCenter = new google.maps.LatLng(latitude, longitude);
 var username = "bBcpK9Na";
 var googleMap;
 
+var markerIcons = {
+    me: { url: "me_emoji.png", scaledSize: new google.maps.Size(40,40) },
+    other: { url: "other_emoji.png", scaledSize: new google.maps.Size(40,40) }
+}
+
 function findCurrentLocation() {
     navigator.geolocation.getCurrentPosition(function(curPosition) {
         latitude = curPosition.coords.latitude;
@@ -11,24 +16,25 @@ function findCurrentLocation() {
         myCenter = new google.maps.LatLng(latitude, longitude);
         googleMap.panTo(myCenter);
         
-        addMarker(myCenter, username);
+        addMarker(myCenter, username, "me");
     });
 }
 
 function loadMap() {
     googleMap = new google.maps.Map(document.getElementById("map"), {
     center: myCenter,
-    zoom: 12
+    zoom: 14
     });
 
     findCurrentLocation();
 }
 
-function addMarker(markPos, markTitle) {
+function addMarker(markPos, markTitle, iconType) {
     mark = new google.maps.Marker({
         position: markPos,
         map: googleMap, 
-        title: markTitle
+        title: markTitle,
+        icon: markerIcons[iconType]
     });
     
     google.maps.event.addListener(mark, "click", function() {
