@@ -4,8 +4,8 @@ var username = "bBcpK9Na";
 var googleMap;
 
 var markerIcons = {
-    me: { url: "me_emoji.png", scaledSize: new google.maps.Size(40,40) },
-    other: { url: "other_emoji.png", scaledSize: new google.maps.Size(40,40) }
+    me:     { url: "me_emoji.png", scaledSize: new google.maps.Size(40,40) },
+    other:  { url: "other_emoji.png", scaledSize: new google.maps.Size(40,40) }
 }
 
 function findCurrentLocation() {
@@ -17,6 +17,8 @@ function findCurrentLocation() {
         googleMap.panTo(myCenter);
         
         addMarker(myCenter, username, "me");
+        
+        getOtherLocations(latitude, longitude);
     });
 }
 
@@ -44,3 +46,17 @@ function addMarker(markPos, markTitle, iconType) {
 	});
 }
 
+function getOtherLocations(curLat, curLong) {        
+        var result;
+        var request = new XMLHttpRequest();
+        
+        request.open("POST", "https://defense-in-derpth.herokuapp.com/sendLocation", true);
+        request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        request.onreadystatechange = function() {
+            if(request.readyState == 4 && request.status == 200) {
+                //console.log(request.responseText);   
+            }
+        }
+        result = "login=" + username + "&lat=" + curLat + "&lng=" + curLong;
+        request.send(result);
+}
