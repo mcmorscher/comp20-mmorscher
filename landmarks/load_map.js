@@ -4,19 +4,22 @@ var username = "bBcpK9Na";
 var googleMap;
 
 var markerIcons = {
-    me:     { url: "me_emoji.png", scaledSize: new google.maps.Size(40,40) },
-    other:  { url: "other_emoji.png", scaledSize: new google.maps.Size(40,40) }
+    me:      { url: "me_emoji.png", scaledSize: new google.maps.Size(40,40) },
+    other:   { url: "other_emoji.png", scaledSize: new google.maps.Size(40,40) },
+    landmark:{ url: "landmark.png", scaledSize: new google.maps.Size(40,40) } 
 }
 
 function findCurrentLocation() {
     navigator.geolocation.getCurrentPosition(function(curPosition) {
-        latitude = curPosition.coords.latitude;
-        longitude = curPosition.coords.longitude;
+        /* TODO: remove hard-coded location */
+        /* Note: My IP address maps to Everett, MA for some reason, which shows no landmarks.*/
+        latitude =  /*curPosition.coords.latitude*/   42.40606509140626;
+        longitude = /*curPosition.coords.longitude*/ -71.12196830120284;
         
         myCenter = new google.maps.LatLng(latitude, longitude);
         googleMap.panTo(myCenter);
         
-        addMarker(myCenter, username, "me");
+        addMarker(myCenter, username + "'s Location", "me");
         
         getOtherLocations(latitude, longitude);
     });
@@ -41,38 +44,48 @@ function addMarker(markPos, markTitle, iconType) {
     
     google.maps.event.addListener(mark, "click", function() {
         popup = new google.maps.InfoWindow();
-		popup.setContent(markTitle + "'s Location");
+		popup.setContent(markTitle);
 		popup.open(map, this);
 	});
 }
 
-function getOtherLocations(curLat, curLong) {        
-        var result, response;
-        var request = new XMLHttpRequest();
-        
-        request.open("POST", "https://defense-in-derpth.herokuapp.com/sendLocation", true);
-        request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        request.onreadystatechange = function() {
-            if(request.readyState == 4 && request.status == 200) {
-                response = JSON.parse(request.responseText);
-                showOtherPeople(response.people);
-            }
+function getOtherLocations(curLat, curLong) {     
+    var response;
+    var request = new XMLHttpRequest();
+    var result = "login=" + username + "&lat=" + curLat + "&lng=" + curLong;
+
+    request.open("POST", "https://defense-in-derpth.herokuapp.com/sendLocation", true);
+    request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    request.onreadystatechange = function() {
+        if(request.readyState == 4 && request.status == 200) {
+            response = JSON.parse(request.responseText);
+            console.log(response);
+            displayOtherPeople(response.people);
+            displayLandmarks(response.landmarks);
         }
-        result = "login=" + username + "&lat=" + curLat + "&lng=" + curLong;
-        request.send(result);
+    }
+    request.send(result);
 }
 
-function showOtherPeople(people) {
+function displayOtherPeople(people) {
     for (person of people) {
         position = new google.maps.LatLng(person.lat, person.lng);
         
         //If my username is returned from datastore, still display my unique icon
         if(person.login == username) {
-            addMarker(position, person.login, "me");
+            addMarker(position, person.login + "'s Location", "me");
         }
         //For other users, display the icon for others
         else {
-            addMarker(position, person.login, "other");
+            addMarker(position, person.login + "'s Location", "other");
         }
+    }
+}
+
+function displayLandmarks(landmarks) {
+    for (landmark of landmarks) {
+        position = new google.maps.LatLng(landmark.geometry.coordinates[1], 
+                                          landmark.geometry.coordinates[0]);
+        addMarker(position, landmark.properties.Details, "landmark");
     }
 }
