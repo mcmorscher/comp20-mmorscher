@@ -1,4 +1,5 @@
 var latitude = 0, longitude = 0;
+var currentDistance = 0;
 var myCenter = new google.maps.LatLng(latitude, longitude);
 var username = "bBcpK9Na";
 var googleMap;
@@ -44,7 +45,8 @@ function addMarker(markPos, markTitle, iconType) {
     
     google.maps.event.addListener(mark, "click", function() {
         popup = new google.maps.InfoWindow();
-		popup.setContent(markTitle);
+        calculateDistanceTo(mark.position);
+		popup.setContent(markTitle + " is " + currentDistance + "miles away!");
 		popup.open(map, this);
 	});
 }
@@ -88,4 +90,23 @@ function displayLandmarks(landmarks) {
                                           landmark.geometry.coordinates[0]);
         addMarker(position, landmark.properties.Details, "landmark");
     }
+}
+
+function calculateDistanceTo(otherPosition) {
+    console.log("opos " + otherPosition);
+    navigator.geolocation.getCurrentPosition(function(curPosition) {
+        /* TODO: remove hard-coded location */
+        /* Note: My IP address maps to Everett, MA for some reason, which shows no landmarks.*/
+        latitude =  /*curPosition.coords.latitude*/   42.40606509140626;
+        longitude = /*curPosition.coords.longitude*/ -71.12196830120284;
+        myPosition = new google.maps.LatLng(latitude, longitude);
+        distanceInMeters = google.maps.geometry.spherical.computeDistanceBetween(myPosition, otherPosition);
+        console.log("in dmet " + distanceInMeters);
+        //Convert distanceInMeters to the distance in miles
+        currentDistance = distanceInMeters * 0.000621371;
+    });
+    
+//    //Convert distanceInMeters to the distance in miles and return
+//    console.log("out dmet " + distanceInMeters);
+//    return distanceInMeters * 0.000621371;
 }
