@@ -1,6 +1,5 @@
-var latitude = 0, longitude = 0;
-var currentDistance = 0;
-var myCenter = new google.maps.LatLng(latitude, longitude);
+var globalLatitude = 0, globalLongitude = 0;
+var myCenter = new google.maps.LatLng(globalLatitude, globalLongitude);
 var username = "bBcpK9Na";
 var googleMap;
 
@@ -20,10 +19,19 @@ function findCurrentLocation() {
         myCenter = new google.maps.LatLng(latitude, longitude);
         googleMap.panTo(myCenter);
         
-        addMarker(myCenter, username + "'s Location", "me");
+        addMarker(myCenter, username, "me");
         
         getOtherLocations(latitude, longitude);
+        
+        testCallback();
     });
+    
+    //console.log(globalLatitude + " " + globalLongitude);
+}
+
+function testCallback(){
+    globalLatitude = latitude;
+    globalLongitude = longitude;
 }
 
 function loadMap() {
@@ -40,13 +48,42 @@ function addMarker(markPos, markTitle, iconType) {
         position: markPos,
         map: googleMap, 
         title: markTitle,
+        animation: google.maps.Animation.DROP,
         icon: markerIcons[iconType]
     });
     
     google.maps.event.addListener(mark, "click", function() {
         popup = new google.maps.InfoWindow();
-        calculateDistanceTo(mark.position);
-		popup.setContent(markTitle + " is " + currentDistance + "miles away!");
+        if(this.icon.url == markerIcons["landmark"].url) {
+            popup.setContent(markTitle);
+        }
+        else if (this.icon.url == markerIcons["other"].url){
+            var otherMarker = this; 
+            navigator.geolocation.getCurrentPosition(function(curPosition) {
+                /* TODO: remove hard-coded location */
+                /* Note: My IP address maps to Everett, MA for some reason, which shows no landmarks.*/
+                latitude =  /*curPosition.coords.latitude*/   42.40606509140626;
+                longitude = /*curPosition.coords.longitude*/ -71.12196830120284;
+                myPosition = new google.maps.LatLng(latitude, longitude);
+                //Display InfoWindow showing distance to other person
+                currentDistance = calculateDistance(myPosition, otherMarker.position);
+                popup.setContent(markTitle + " is " + currentDistance + "miles away!");
+            });
+        }
+        else {
+            var meMarker = this;
+            navigator.geolocation.getCurrentPosition(function(curPosition) {
+                /* TODO: remove hard-coded location */
+                /* Note: My IP address maps to Everett, MA for some reason, which shows no landmarks.*/
+                latitude =  /*curPosition.coords.latitude*/   42.40606509140626;
+                longitude = /*curPosition.coords.longitude*/ -71.12196830120284;
+                myPosition = new google.maps.LatLng(latitude, longitude);
+                //Display InfoWindow showing distance to other person
+
+                //TODO: Display closest landmark info
+            });
+        }
+        
 		popup.open(map, this);
 	});
 }
@@ -92,21 +129,8 @@ function displayLandmarks(landmarks) {
     }
 }
 
-function calculateDistanceTo(otherPosition) {
-    console.log("opos " + otherPosition);
-    navigator.geolocation.getCurrentPosition(function(curPosition) {
-        /* TODO: remove hard-coded location */
-        /* Note: My IP address maps to Everett, MA for some reason, which shows no landmarks.*/
-        latitude =  /*curPosition.coords.latitude*/   42.40606509140626;
-        longitude = /*curPosition.coords.longitude*/ -71.12196830120284;
-        myPosition = new google.maps.LatLng(latitude, longitude);
-        distanceInMeters = google.maps.geometry.spherical.computeDistanceBetween(myPosition, otherPosition);
-        console.log("in dmet " + distanceInMeters);
-        //Convert distanceInMeters to the distance in miles
-        currentDistance = distanceInMeters * 0.000621371;
-    });
-    
-//    //Convert distanceInMeters to the distance in miles and return
-//    console.log("out dmet " + distanceInMeters);
-//    return distanceInMeters * 0.000621371;
+function calculateDistance(myPosition, otherPosition) {
+    distanceInMeters = google.maps.geometry.spherical.computeDistanceBetween(myPosition, otherPosition);
+    //Convert distanceInMeters to the distance in miles and return
+    return distanceInMeters * 0.000621371;
 }
