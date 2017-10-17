@@ -2,6 +2,7 @@ var globalLatitude = 0, globalLongitude = 0;
 var myCenter = new google.maps.LatLng(globalLatitude, globalLongitude);
 var username = "bBcpK9Na";
 var googleMap;
+var landmarksList;
 
 var markerIcons = {
     me:      { url: "me_emoji.png", scaledSize: new google.maps.Size(40,40) },
@@ -22,16 +23,7 @@ function findCurrentLocation() {
         addMarker(myCenter, username, "me");
         
         getOtherLocations(latitude, longitude);
-        
-        testCallback();
     });
-    
-    //console.log(globalLatitude + " " + globalLongitude);
-}
-
-function testCallback(){
-    globalLatitude = latitude;
-    globalLongitude = longitude;
 }
 
 function loadMap() {
@@ -67,7 +59,7 @@ function addMarker(markPos, markTitle, iconType) {
                 myPosition = new google.maps.LatLng(latitude, longitude);
                 //Display InfoWindow showing distance to other person
                 currentDistance = calculateDistance(myPosition, otherMarker.position);
-                popup.setContent(markTitle + " is " + currentDistance + "miles away!");
+                popup.setContent(markTitle + " is " + currentDistance + " miles away!");
             });
         }
         else {
@@ -78,9 +70,16 @@ function addMarker(markPos, markTitle, iconType) {
                 latitude =  /*curPosition.coords.latitude*/   42.40606509140626;
                 longitude = /*curPosition.coords.longitude*/ -71.12196830120284;
                 myPosition = new google.maps.LatLng(latitude, longitude);
-                //Display InfoWindow showing distance to other person
-
-                //TODO: Display closest landmark info
+                if(landmarksList.length > 0){
+                    closestLandmark = findClosestLandmark(myPosition);
+                    closestPosition = new google.maps.LatLng(closestLandmark.geometry.coordinates[1], 
+                                       closestLandmark.geometry.coordinates[0]);
+                    closestDistance = calculateDistance(myPosition, closestPosition);
+                    popup.setContent(closestLandmark.properties.Location_Name + " is the closest landmark, " + closestDistance + " miles away.");
+                }
+                else {
+                    popup.setContent("There are no landmarks close to your location.");
+                }
             });
         }
         
@@ -112,16 +111,20 @@ function displayOtherPeople(people) {
         
         //If my username is returned from datastore, still display my unique icon
         if(person.login == username) {
-            addMarker(position, person.login + "'s Location", "me");
+            addMarker(position, person.login, "me");
         }
         //For other users, display the icon for others
         else {
-            addMarker(position, person.login + "'s Location", "other");
+            addMarker(position, person.login, "other");
         }
     }
 }
 
 function displayLandmarks(landmarks) {
+    //Store list of landmarks globally for later use in findClosestLandmark function
+    landmarksList = landmarks;
+    
+    //Display each landmark returned by the server
     for (landmark of landmarks) {
         position = new google.maps.LatLng(landmark.geometry.coordinates[1], 
                                           landmark.geometry.coordinates[0]);
@@ -131,6 +134,22 @@ function displayLandmarks(landmarks) {
 
 function calculateDistance(myPosition, otherPosition) {
     distanceInMeters = google.maps.geometry.spherical.computeDistanceBetween(myPosition, otherPosition);
+    
     //Convert distanceInMeters to the distance in miles and return
     return distanceInMeters * 0.000621371;
+}
+
+function findClosestLandmark(myPosition) {
+    var closestLandmark, closestDistance, curDistance;
+    for (landmark of landmarksList) {
+        markPosition = new google.maps.LatLng(landmark.geometry.coordinates[1], 
+                                          landmark.geometry.coordinates[0]);
+        curDistance = calculateDistance(myPosition, markPosition);
+        //Initialize closestLandmark to first landmark in list
+        //Check if current landmark is the closest so far
+        if ((landmark == landmarksList[0]) || (curDistance < closestDistance)) {
+            closestLandmark = landmark;
+            closestDistance = curDistance;
+        }
+    return closestLandmark;
 }
