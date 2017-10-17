@@ -76,6 +76,7 @@ function addMarker(markPos, markTitle, iconType) {
                                        closestLandmark.geometry.coordinates[0]);
                     closestDistance = calculateDistance(myPosition, closestPosition);
                     popup.setContent(closestLandmark.properties.Location_Name + " is the closest landmark, " + closestDistance + " miles away.");
+                    drawPolyline(myPosition, closestPosition);
                 }
                 else {
                     popup.setContent("There are no landmarks close to your location.");
@@ -151,5 +152,18 @@ function findClosestLandmark(myPosition) {
             closestLandmark = landmark;
             closestDistance = curDistance;
         }
+    }
     return closestLandmark;
 }
+
+function drawPolyline(position1, position2) {
+    var points = [position1, position2];
+    var polyline = new google.maps.Polyline({
+        path: points,
+        strokeColor: "#E67E22",
+        strokeOpacity: 0.8,
+        strokeWeight: 5
+    });
+    polyline.setMap(googleMap);
+}
+    
