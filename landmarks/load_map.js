@@ -29,7 +29,7 @@ function findCurrentLocation() {
 function loadMap() {
     googleMap = new google.maps.Map(document.getElementById("map"), {
     center: myCenter,
-    zoom: 14
+    zoom: 15
     });
 
     findCurrentLocation();
@@ -75,7 +75,7 @@ function addMarker(markPos, markTitle, iconType) {
                     closestPosition = new google.maps.LatLng(closestLandmark.geometry.coordinates[1], 
                                        closestLandmark.geometry.coordinates[0]);
                     closestDistance = calculateDistance(myPosition, closestPosition);
-                    popup.setContent(closestLandmark.properties.Location_Name + " is the closest landmark, " + closestDistance + " miles away.");
+                    popup.setContent("My Location &#40;" + username + "&#41; <br> <br> The closest landmark is: "  + closestLandmark.properties.Location_Name + ".<br> It is " + closestDistance + " miles away.");
                     drawPolyline(myPosition, closestPosition);
                 }
                 else {
@@ -161,7 +161,7 @@ function drawPolyline(position1, position2) {
     var polyline = new google.maps.Polyline({
         path: points,
         strokeColor: "#E67E22",
-        strokeOpacity: 0.8,
+        strokeOpacity: 0.7,
         strokeWeight: 5
     });
     polyline.setMap(googleMap);
