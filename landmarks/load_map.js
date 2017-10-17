@@ -12,10 +12,9 @@ var markerIcons = {
 
 function findCurrentLocation() {
     navigator.geolocation.getCurrentPosition(function(curPosition) {
-        /* TODO: remove hard-coded location */
-        /* Note: My IP address maps to Everett, MA for some reason, which shows no landmarks.*/
-        latitude =  /*curPosition.coords.latitude*/   42.40606509140626;
-        longitude = /*curPosition.coords.longitude*/ -71.12196830120284;
+
+        latitude =  curPosition.coords.latitude;
+        longitude = curPosition.coords.longitude;
         
         myCenter = new google.maps.LatLng(latitude, longitude);
         googleMap.panTo(myCenter);
@@ -52,10 +51,8 @@ function addMarker(markPos, markTitle, iconType) {
         else if (this.icon.url == markerIcons["other"].url){
             var otherMarker = this; 
             navigator.geolocation.getCurrentPosition(function(curPosition) {
-                /* TODO: remove hard-coded location */
-                /* Note: My IP address maps to Everett, MA for some reason, which shows no landmarks.*/
-                latitude =  /*curPosition.coords.latitude*/   42.40606509140626;
-                longitude = /*curPosition.coords.longitude*/ -71.12196830120284;
+                latitude =  curPosition.coords.latitude;
+                longitude = curPosition.coords.longitude;
                 myPosition = new google.maps.LatLng(latitude, longitude);
                 //Display InfoWindow showing distance to other person
                 currentDistance = calculateDistance(myPosition, otherMarker.position);
@@ -65,11 +62,10 @@ function addMarker(markPos, markTitle, iconType) {
         else {
             var meMarker = this;
             navigator.geolocation.getCurrentPosition(function(curPosition) {
-                /* TODO: remove hard-coded location */
-                /* Note: My IP address maps to Everett, MA for some reason, which shows no landmarks.*/
-                latitude =  /*curPosition.coords.latitude*/   42.40606509140626;
-                longitude = /*curPosition.coords.longitude*/ -71.12196830120284;
+                latitude =  curPosition.coords.latitude;
+                longitude = curPosition.coords.longitude;
                 myPosition = new google.maps.LatLng(latitude, longitude);
+                //Display InfoWindow showing closest landmark and render polyline
                 if(landmarksList.length > 0){
                     closestLandmark = findClosestLandmark(myPosition);
                     closestPosition = new google.maps.LatLng(closestLandmark.geometry.coordinates[1], 
@@ -78,12 +74,12 @@ function addMarker(markPos, markTitle, iconType) {
                     popup.setContent("My Location &#40;" + username + "&#41; <br> <br> The closest landmark is: "  + closestLandmark.properties.Location_Name + ".<br> It is " + closestDistance + " miles away.");
                     drawPolyline(myPosition, closestPosition);
                 }
+                //If the landmarks list returns empty, inform the user
                 else {
                     popup.setContent("There are no landmarks close to your location.");
                 }
             });
         }
-        
 		popup.open(map, this);
 	});
 }
@@ -98,7 +94,6 @@ function getOtherLocations(curLat, curLong) {
     request.onreadystatechange = function() {
         if(request.readyState == 4 && request.status == 200) {
             response = JSON.parse(request.responseText);
-            console.log(response);
             displayOtherPeople(response.people);
             displayLandmarks(response.landmarks);
         }
@@ -144,7 +139,7 @@ function findClosestLandmark(myPosition) {
     var closestLandmark, closestDistance, curDistance;
     for (landmark of landmarksList) {
         markPosition = new google.maps.LatLng(landmark.geometry.coordinates[1], 
-                                          landmark.geometry.coordinates[0]);
+                                              landmark.geometry.coordinates[0]);
         curDistance = calculateDistance(myPosition, markPosition);
         //Initialize closestLandmark to first landmark in list
         //Check if current landmark is the closest so far
