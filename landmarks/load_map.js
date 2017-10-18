@@ -1,5 +1,5 @@
-var globalLatitude = 0, globalLongitude = 0;
-var myCenter = new google.maps.LatLng(globalLatitude, globalLongitude);
+var latitude = 0, longitude = 0;
+var myCenter = new google.maps.LatLng(latitude, longitude);
 var username = "bBcpK9Na";
 var googleMap;
 var landmarksList;
@@ -45,40 +45,29 @@ function addMarker(markPos, markTitle, iconType) {
     
     google.maps.event.addListener(mark, "click", function() {
         popup = new google.maps.InfoWindow();
+        myPosition = new google.maps.LatLng(latitude, longitude);
         if(this.icon.url == markerIcons["landmark"].url) {
             popup.setContent(markTitle);
         }
         else if (this.icon.url == markerIcons["other"].url){
-            var otherMarker = this; 
-            navigator.geolocation.getCurrentPosition(function(curPosition) {
-                latitude =  curPosition.coords.latitude;
-                longitude = curPosition.coords.longitude;
-                myPosition = new google.maps.LatLng(latitude, longitude);
-                //Display InfoWindow showing distance to other person
-                currentDistance = calculateDistance(myPosition, otherMarker.position);
-                popup.setContent(markTitle + " is " + currentDistance + " miles away!");
-            });
+            //Display InfoWindow showing distance to other person
+            currentDistance = calculateDistance(myPosition, this.position);
+            popup.setContent(markTitle + " is " + currentDistance + " miles away!");
         }
         else {
-            var meMarker = this;
-            navigator.geolocation.getCurrentPosition(function(curPosition) {
-                latitude =  curPosition.coords.latitude;
-                longitude = curPosition.coords.longitude;
-                myPosition = new google.maps.LatLng(latitude, longitude);
-                //Display InfoWindow showing closest landmark and render polyline
-                if(landmarksList.length > 0){
-                    closestLandmark = findClosestLandmark(myPosition);
-                    closestPosition = new google.maps.LatLng(closestLandmark.geometry.coordinates[1], 
-                                       closestLandmark.geometry.coordinates[0]);
-                    closestDistance = calculateDistance(myPosition, closestPosition);
-                    popup.setContent("My Location &#40;" + username + "&#41; <br> <br> The closest landmark is: "  + closestLandmark.properties.Location_Name + ".<br> It is " + closestDistance + " miles away.");
-                    drawPolyline(myPosition, closestPosition);
-                }
-                //If the landmarks list returns empty, inform the user
-                else {
-                    popup.setContent("There are no landmarks close to your location.");
-                }
-            });
+            //Display InfoWindow showing closest landmark and render polyline
+            if(landmarksList.length > 0){
+                closestLandmark = findClosestLandmark(myPosition);
+                closestPosition = new google.maps.LatLng(closestLandmark.geometry.coordinates[1], 
+                                   closestLandmark.geometry.coordinates[0]);
+                closestDistance = calculateDistance(myPosition, closestPosition);
+                popup.setContent("My Location &#40;" + username + "&#41; <br> <br> The closest landmark is: "  + closestLandmark.properties.Location_Name + ".<br> It is " + closestDistance + " miles away.");
+                drawPolyline(myPosition, closestPosition);
+            }
+            //If the landmarks list returns empty, inform the user
+            else {
+                popup.setContent("There are no landmarks close to your location.");
+            }
         }
 		popup.open(map, this);
 	});
@@ -88,12 +77,15 @@ function getOtherLocations(curLat, curLong) {
     var response;
     var request = new XMLHttpRequest();
     var result = "login=" + username + "&lat=" + curLat + "&lng=" + curLong;
-
+    console.log(result); //will remove
+    
     request.open("POST", "https://defense-in-derpth.herokuapp.com/sendLocation", true);
     request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     request.onreadystatechange = function() {
         if(request.readyState == 4 && request.status == 200) {
             response = JSON.parse(request.responseText);
+            console.log(response); //will remove
+            
             displayOtherPeople(response.people);
             displayLandmarks(response.landmarks);
         }
