@@ -8,7 +8,19 @@
     <link rel="stylesheet" href="style.css" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script>
-        // Your work will be done here...
+        var dayOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+        var monthOfYear = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", 
+                           "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        
+        var currentDate = new Date();
+        var timestamp = dayOfWeek[currentDate.getDay()] + " " + 
+                        monthOfYear[currentDate.getMonth()] + " " + 
+                        currentDate.getDate() + " " +
+                        currentDate.getHours() + ":" +
+                        currentDate.getMinutes() + ":" +
+                        currentDate.getSeconds() + " " +
+                        currentDate.getFullYear() + " - ";
+        console.log(timestamp);
     </script>
 </head>
 
