@@ -12,15 +12,26 @@
         var monthOfYear = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", 
                            "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
         
-        var currentDate = new Date();
-        var timestamp = dayOfWeek[currentDate.getDay()] + " " + 
-                        monthOfYear[currentDate.getMonth()] + " " + 
-                        currentDate.getDate() + " " +
-                        currentDate.getHours() + ":" +
-                        currentDate.getMinutes() + ":" +
-                        currentDate.getSeconds() + " " +
-                        currentDate.getFullYear() + " - ";
-        console.log(timestamp);
+        function getTimestamp() {
+            var currentDate = new Date();
+            return  dayOfWeek[currentDate.getDay()] + " " + 
+                    monthOfYear[currentDate.getMonth()] + " " + 
+                    currentDate.getDate() + " " +
+                    currentDate.getHours() + ":" +
+                    currentDate.getMinutes() + ":" +
+                    currentDate.getSeconds() + " " +
+                    currentDate.getFullYear() + " - ";
+        }
+        
+        //TODO: Convert to jQuery. Using temporary JavaScript to make progress since the jQuery I wrote doesn't work.
+        $(document).ready(function(){
+            document.getElementById("msg").onkeypress = function(e) {
+                if(e.keyCode == 13) { //Enter key
+                    localStorage.setItem(getTimestamp(), document.getElementById("msg").value);
+                    document.getElementById("msg").value = "";
+                }
+            };
+        });
     </script>
 </head>
 
