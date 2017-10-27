@@ -23,12 +23,19 @@
                     currentDate.getFullYear() + " - ";
         }
         
+        function loadMessages() {
+            
+        }
+        
         //TODO: Convert to jQuery. Using temporary JavaScript to make progress since the jQuery I wrote doesn't work.
         $(document).ready(function(){
-            document.getElementById("msg").onkeypress = function(e) {
-                if(e.keyCode == 13) { //Enter key
-                    localStorage.setItem(getTimestamp(), document.getElementById("msg").value);
-                    document.getElementById("msg").value = "";
+            loadMessages();
+            
+            $("#msg")[0].onkeypress = function(e) {
+                if(e.keyCode == 13) { //When user presses enter
+                    //Store text locally and clear the input field
+                    localStorage.setItem(getTimestamp(), $("#msg")[0].value);
+                    $("#msg")[0].value = "";
                 }
             };
         });
