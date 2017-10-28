@@ -12,6 +12,7 @@
         var monthOfYear = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", 
                            "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
         
+        //Return formatted timestamp
         function getTimestamp() {
             var currentDate = new Date();
             return  dayOfWeek[currentDate.getDay()] + " " + 
@@ -23,6 +24,7 @@
                     currentDate.getFullYear() + " - ";
         }
         
+        //Get messages from local storage and display in reverse order
         function loadMessages() {
             var messageKeys = Object.keys(localStorage);
             for(key of messageKeys){
@@ -32,12 +34,13 @@
             }
         }
         
+        //Update display when a new entry is made
         function reloadMessages(){
             $("#log")[0].innerHTML = "";
             loadMessages();
         }
         
-        //TODO: Convert to jQuery. Using temporary JavaScript to make progress since the jQuery I wrote doesn't work.
+        //Display messages and listen for new messages when page is loaded
         $(document).ready(function(){
             loadMessages();
             
