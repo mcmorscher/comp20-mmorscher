@@ -7,6 +7,7 @@
     <title>Captain's Log</title>
     <link rel="stylesheet" href="style.css" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="sortHelpers.js"></script>
     <script>
         var dayOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
         var monthOfYear = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", 
@@ -26,12 +27,15 @@
         
         //Get messages from local storage and display in reverse order
         function loadMessages() {
+            var messageArray = [];
             var messageKeys = Object.keys(localStorage);
             for(key of messageKeys){
                 var message = key + localStorage.getItem(key);
-                var previous = $("#log")[0].innerHTML
-                $("#log")[0].innerHTML = "<p>" + message + "</p>" + previous;
+                messageArray.push(message);
+                //var previous = $("#log")[0].innerHTML
+                //$("#log")[0].innerHTML = "<p>" + message + "</p>" + previous;
             }
+            return messageArray;
         }
         
         //Update display when a new entry is made
@@ -40,9 +44,29 @@
             loadMessages();
         }
         
+        //In case localStorage doesn't preserve order, sort by all date fields
+        function sortMessages(messageArray){
+            messageArray.sort(sortBySecond);
+            messageArray.sort(sortByMinute);
+            messageArray.sort(sortByHour);
+            messageArray.sort(sortByDay);
+            messageArray.sort(sortByMonth);
+            messageArray.sort(sortByYear);
+
+            displayMessages(messageArray);
+        }
+        
+        function displayMessages(messageArray){
+            console.log(messageArray);
+            for(message of messageArray){
+                var previous = $("#log")[0].innerHTML
+                $("#log")[0].innerHTML = "<p>" + message + "</p>" + previous;
+            }
+        }
+        
         //Display messages and listen for new messages when page is loaded
         $(document).ready(function(){
-            loadMessages();
+            sortMessages(loadMessages());
             
             $("#msg")[0].onkeypress = function(e) {
                 if(e.keyCode == 13) { //When user presses enter
