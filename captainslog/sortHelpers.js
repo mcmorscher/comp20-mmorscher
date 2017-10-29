@@ -1,41 +1,51 @@
 var monthOfYear = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", 
                    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
-//TODO: use string split instead since leading zeros will be missing and mess up the substrings
-
 function sortByYear(a, b){
-    aYear = a.substr(20,4);
-    bYear = b.substr(20,4);
+    var aFields = a.split(" ");
+    var bFields = b.split(" ");
+    aYear = aFields[4];
+    bYear = bFields[4];
     return compare(aYear, bYear);
 }
 
 function sortByMonth(a, b){
-    aMonth = monthOfYear.indexOf(a.substr(4,3));
-    bMonth = monthOfYear.indexOf(b.substr(4,3));
+    var aFields = a.split(" ");
+    var bFields = b.split(" ");
+    aMonth = monthOfYear.indexOf(aFields[1]);
+    bMonth = monthOfYear.indexOf(bFields[1]);
     return compare(aMonth, bMonth);
 }
 
 function sortByDay(a, b){
-    aDay = a.substr(8, 2);
-    bDay = b.substr(8, 2);
+    var aFields = a.split(" ");
+    var bFields = b.split(" ");
+    aDay = aFields[2];
+    bDay = bFields[2];
     return compare(aDay, bDay);
 }
 
 function sortByHour(a, b){
-    aHour = a.substr(11, 2);
-    bHour = b.substr(11, 2);
+    var aTime = a.split(" ")[3].split(":");
+    var bTime = b.split(" ")[3].split(":");
+    aHour = aTime[0];
+    bHour = bTime[0];
     return compare(aHour, bHour);
 }
 
 function sortByMinute(a, b){
-    aMin = a.substr(14, 2);
-    bMin = b.substr(14, 2);
+    var aTime = a.split(" ")[3].split(":");
+    var bTime = b.split(" ")[3].split(":");
+    aMin = aTime[1];
+    bMin = bTime[1];
     return compare(aMin, bMin);
 }
 
 function sortBySecond(a, b){
-    aSec = a.substr(17, 2);
-    bSec = b.substr(17, 2);
+    var aTime = a.split(" ")[3].split(":");
+    var bTime = b.split(" ")[3].split(":");
+    aSec = aTime[2];
+    bSec = bTime[2];
     return compare(aSec, bSec);
 }
 

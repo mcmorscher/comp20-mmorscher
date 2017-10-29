@@ -57,12 +57,13 @@
         }
         
         function displayMessages(messageArray){
-            console.log(messageArray);
             for(message of messageArray){
                 var previous = $("#log")[0].innerHTML
                 $("#log")[0].innerHTML = "<p>" + message + "</p>" + previous;
             }
         }
+        
+        //TODO: Investigate why new entry doesn't work anymore
         
         //Display messages and listen for new messages when page is loaded
         $(document).ready(function(){
