@@ -1,6 +1,20 @@
 var monthOfYear = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", 
                    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
+//Manual stable sort implementation, because Chrome maddeningly only uses a stable sort implementation for 10 or fewer elements, and unstable sort for more elements.
+function stableSort(messageArray, sortHelper){
+    var temp, i, j;
+    for(i = 0; i < messageArray.length; i++){
+        temp = messageArray[i];
+        for(j = i-1; j > -1 && sortHelper(messageArray[j], temp) == 1; j--){
+            messageArray[j+1] = messageArray[j];
+        }
+        messageArray[j+1] = temp;
+    }
+    return messageArray;
+}
+
+
 function sortByYear(a, b){
     var aFields = a.split(" ");
     var bFields = b.split(" ");

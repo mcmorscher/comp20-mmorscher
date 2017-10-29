@@ -44,12 +44,12 @@
         
         //In case localStorage doesn't preserve order, sort by all date fields
         function sortMessages(messageArray){
-            messageArray.sort(sortBySecond);
-            messageArray.sort(sortByMinute);
-            messageArray.sort(sortByHour);
-            messageArray.sort(sortByDay);
-            messageArray.sort(sortByMonth);
-            messageArray.sort(sortByYear);
+            messageArray = stableSort(messageArray, sortBySecond);
+            messageArray = stableSort(messageArray, sortByMinute);
+            messageArray = stableSort(messageArray, sortByHour);
+            messageArray = stableSort(messageArray, sortByDay);
+            messageArray = stableSort(messageArray, sortByMonth);
+            messageArray = stableSort(messageArray, sortByYear);
 
             displayMessages(messageArray);
         }
