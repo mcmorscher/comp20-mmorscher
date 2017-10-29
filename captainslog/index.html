@@ -32,8 +32,6 @@
             for(key of messageKeys){
                 var message = key + localStorage.getItem(key);
                 messageArray.push(message);
-                //var previous = $("#log")[0].innerHTML
-                //$("#log")[0].innerHTML = "<p>" + message + "</p>" + previous;
             }
             return messageArray;
         }
@@ -41,7 +39,7 @@
         //Update display when a new entry is made
         function reloadMessages(){
             $("#log")[0].innerHTML = "";
-            loadMessages();
+            sortMessages(loadMessages());
         }
         
         //In case localStorage doesn't preserve order, sort by all date fields
@@ -56,14 +54,13 @@
             displayMessages(messageArray);
         }
         
+        //Add messages as paragraphs in the HTML
         function displayMessages(messageArray){
             for(message of messageArray){
                 var previous = $("#log")[0].innerHTML
                 $("#log")[0].innerHTML = "<p>" + message + "</p>" + previous;
             }
         }
-        
-        //TODO: Investigate why new entry doesn't work anymore
         
         //Display messages and listen for new messages when page is loaded
         $(document).ready(function(){

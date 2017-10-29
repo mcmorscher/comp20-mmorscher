@@ -50,6 +50,12 @@ function sortBySecond(a, b){
 }
 
 function compare(aField, bField){
+    //Simulate leading zeros
+    if(aField.length < bField.length)
+        aField = "0" + aField;
+    else if(bField.length < aField.length)
+        bField = "0" + bField;
+    
     if(aField == bField)
         return 0;
     else if(aField < bField)
