@@ -82,7 +82,7 @@ function getOtherLocations(curLat, curLong) {
     var request = new XMLHttpRequest();
     var result = "login=" + username + "&lat=" + curLat + "&lng=" + curLong;
     
-    request.open("POST", "https://defense-in-derpth.herokuapp.com/sendLocation", true);
+    request.open("POST", "https://radiant-ocean-68966.herokuapp.com/sendLocation", true);
     request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     request.onreadystatechange = function() {
         if(request.readyState == 4 && request.status == 200) {
