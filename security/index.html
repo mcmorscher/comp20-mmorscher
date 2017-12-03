@@ -17,10 +17,29 @@
     <li>Use of the curl tool for data transfer</li>
     <h3>Abstract of Findings</h3>
     <h3>Issues Found</h3>
+    <ol type="1">
+        <li>
+            <h4>Information Exposure</h4>
+            <p>Location: stark-castle-33112.herokuapp.com/checkins.json</p>
+            <p>Severity: Medium. The data being exposed through the checkins.json module is only the login, not any user passwords, but this is still a bad practice.</p>
+            <p>Description: The issue was found during routine black box testing, following the specification of the module. To retrieve one's checkin data, they must enter their login via the query string, which then remains exposed. The information will remain in unsecured browser history and cache as well, representing a persistent threat.</p>
+            <p>Documentation:</p>
+            <figure>
+                <img src="Issue1.1.JPG" alt="Information Exposure Documentation">
+                <figcaption>Information exposure in the URL.</figcaption>
+            </figure>
+            <figure>
+                <img src="Issue1.2.JPG" alt="Information Exposure Documentation">
+                <figcaption>Information exposure in browser history.</figcaption>
+            </figure>
+            <p>Resolution: I recommend use of the HTTP POST method in place of using HTTP GET, which would allow entry of login through a form, and would allow processing of the response without exposing the login in the URL.</p>
+        </li>
+    </ol>
     <h3>Conclusion</h3>
-    <h5>References</h5>
+    <h3>References</h3>
     <li><a href="http://www.veracode.com/security/xss">Cross-Site Scripting (XSS) Tutorial</a></li>
-    
+    <li><a href="https://www.owasp.org/index.php/Information_exposure_through_query_strings_in_url">Information exposure through query strings in url</a></li>
+    <li><a href="https://cwe.mitre.org/data/definitions/598.html">CWE-598: Information Exposure Through Query Strings in GET Request</a></li>
     
     
     
