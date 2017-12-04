@@ -3,6 +3,15 @@ body {
     font-family: consolas, monospace;
 }
 
-h1 {
+h1, h5{
     text-align: center;
+}
+
+h5 {
+    font-size: 18px;
+}
+
+figcaption {
+    font-style: italic;
+    color: red;
 }

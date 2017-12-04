@@ -8,6 +8,7 @@
     
 <body>
     <h1>Security Assessment of stark-castle-33112</h1>
+    <h5>Michael Morscher</h5>
     <h3>Introduction</h3>
     <p>My name is Michael Morscher, expert cybersecurity consultant specializing in penetration testing. I was hired by Jeremy Batchelder to perform an analysis of his Historic Landmarks program, consisting of a client-facing graphic interface and a server-side application with its own primitive interface. In this report, I will be researching and documenting security vulnerabilities in these applications, as well as providing recommendations to resolve them.</p>
     <h3>Methodology</h3>
@@ -16,6 +17,7 @@
     <li>Manual review of source code and subsequent "white box" testing of less obvious attacks</li>
     <li>Use of the curl tool for data transfer</li>
     <h3>Abstract of Findings</h3>
+    <br> <br> <br> <br> <br> <br> <!-- TEMP -->
     <h3>Issues Found</h3>
     <ol type="1">
         <li>
@@ -33,6 +35,30 @@
                 <figcaption>Information exposure in browser history.</figcaption>
             </figure>
             <p>Resolution: I recommend use of the HTTP POST method in place of using HTTP GET, which would allow entry of login through a form, and would allow processing of the response without exposing the login in the URL.</p>
+        </li>
+        <li>
+            <h4>Cross-Site Scripting</h4>
+            <p>Location: index.js</p>
+            <p>Severity: High. This security vulnerability allows for complete hijacking of the website.</p>
+            <p>Description: Upon review of the index.js source code, it was noticed that no input validation was being done in the POST /sendLocation API. This means that when a user enters correctly formatted input in the form of an executable script, such as for their "login" value, the script will actually execute when the page loads and the HTML is read for display. Moreover, since the index page displays all checkins to all users, any user accessing the site after this attack is executed will be a victim.</p>
+            <p>Documentation:</p>
+            <figure>
+                <img src="Issue2.1.JPG" alt="Cross-Site Scripting Documentation">
+                <figcaption>Code section showing no input validation. (index.js:29-33)</figcaption>
+            </figure>
+            <figure>
+                <img src="Issue2.2.JPG" alt="Cross-Site Scripting Documentation">
+                <figcaption>Proper application behavior, before XSS attack.</figcaption>
+            </figure>
+            <figure>
+                <img src="Issue2.3.JPG" alt="Cross-Site Scripting Documentation">
+                <figcaption>Posting of the XSS script via curl.</figcaption>
+            </figure>
+            <figure>
+                <img src="Issue2.4.JPG" alt="Cross-Site Scripting Documentation">
+                <figcaption>Improper application behavior, after XSS attack.</figcaption>
+            </figure>
+            <p>Resolution: I strongly recommend performing input validation at line 29 of index.js to remove special characters associated with scripting, such as '&lt;', '&gt;', '=', and '/'. This would prevent cross-site scripting from being able to occur.</p>
         </li>
     </ol>
     <h3>Conclusion</h3>
