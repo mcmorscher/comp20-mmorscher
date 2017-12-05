@@ -22,10 +22,10 @@
     <ol type="1">
         <li>
             <h4>Information Exposure</h4>
-            <p>Location: stark-castle-33112.herokuapp.com/checkins.json</p>
-            <p>Severity: Medium. The data being exposed through the checkins.json module is only the login, not any user passwords, but this is still a bad practice.</p>
-            <p>Description: The issue was found during routine black box testing, following the specification of the module. To retrieve one's checkin data, they must enter their login via the query string, which then remains exposed. The information will remain in unsecured browser history and cache as well, representing a persistent threat.</p>
-            <p>Documentation:</p>
+            <p><span class="under">Location</span>: stark-castle-33112.herokuapp.com/checkins.json</p>
+            <p><span class="under">Severity</span>: Medium. The data being exposed through the checkins.json module is only the login, not any user passwords, but this is still a bad practice.</p>
+            <p><span class="under">Description</span>: The issue was found during routine black box testing, following the specification of the module. To retrieve one's checkin data, they must enter their login via the query string, which then remains exposed. The information will remain in unsecured browser history and cache as well, representing a persistent threat.</p>
+            <p><span class="under">Documentation</span>:</p>
             <figure>
                 <img src="Issue1.1.JPG" alt="Information Exposure Documentation">
                 <figcaption>Information exposure in the URL.</figcaption>
@@ -34,14 +34,14 @@
                 <img src="Issue1.2.JPG" alt="Information Exposure Documentation">
                 <figcaption>Information exposure in browser history.</figcaption>
             </figure>
-            <p>Resolution: I recommend use of the HTTP POST method in place of using HTTP GET, which would allow entry of login through a form, and would allow processing of the response without exposing the login in the URL.</p>
+            <p><span class="under">Resolution</span>: I recommend use of the HTTP POST method in place of using HTTP GET, which would allow entry of login through a form, and would allow processing of the response without exposing the login in the URL.</p>
         </li>
         <li>
             <h4>Cross-Site Scripting</h4>
-            <p>Location: index.js</p>
-            <p>Severity: High. This security vulnerability allows for complete hijacking of the website.</p>
-            <p>Description: Upon review of the index.js source code, it was noticed that no input validation was being done in the POST /sendLocation API. This means that when a user enters correctly formatted input in the form of an executable script, such as for their "login" value, the script will actually execute when the page loads and the HTML is read for display. Moreover, since the index page displays all checkins to all users, any user accessing the site after this attack is executed will be a victim.</p>
-            <p>Documentation:</p>
+            <p><span class="under">Location</span>: index.js</p>
+            <p><span class="under">Severity</span>: High. This security vulnerability allows for complete hijacking of the website.</p>
+            <p><span class="under">Description</span>: Upon review of the index.js source code, it was noticed that no input validation was being done in the POST /sendLocation API. This means that when a user enters correctly formatted input in the form of an executable script, such as for their "login" value, the script will actually execute when the page loads and the HTML is read for display. Moreover, since the index page displays all checkins to all users, any user accessing the site after this attack is executed will be a victim.</p>
+            <p><span class="under">Documentation</span>:</p>
             <figure>
                 <img src="Issue2.1.JPG" alt="Cross-Site Scripting Documentation">
                 <figcaption>Code section showing no input validation. (index.js:29-33)</figcaption>
@@ -58,7 +58,19 @@
                 <img src="Issue2.4.JPG" alt="Cross-Site Scripting Documentation">
                 <figcaption>Improper application behavior, after XSS attack.</figcaption>
             </figure>
-            <p>Resolution: I strongly recommend performing input validation at line 29 of index.js to remove special characters associated with scripting, such as '&lt;', '&gt;', '=', and '/'. This would prevent cross-site scripting from being able to occur.</p>
+            <p><span class="under">Resolution</span>: I strongly recommend performing input validation at line 29 of index.js to remove special characters associated with scripting, such as '&lt;', '&gt;', '=', and '/' or replacing them with character equivalents. This would prevent cross-site scripting from being able to occur.</p>
+        </li>
+        <li>
+            <h4>NoSQL Injection</h4>
+            <p><span class="under">Location</span>: stark-castle-33112.herokuapp.com/checkins.json</p>
+            <p><span class="under">Severity</span>: High. This hack exposes the sensitive data of all other users of the site, including precise location information. (Of course, most of this information is already exposed on the site index, but in most contexts this would be a bigger issue)</p>
+            <p><span class="under">Description</span>: This vulnerability was discovered during white box testing based on the required user input through the query string to request data. Being that without validation, query strings can be treated as objects, a user can enter an object rather than a string and the object can be executable MongoDB commands. In this example, a "not equals" filter command was injected before the login string, meaning that the server will respond with all existing checkins except those by the present user. </p>
+            <p><span class="under">Documentation</span>:</p>
+            <figure>
+                <img src="Issue3.1.JPG" alt="NoSQL Injection Documentation">
+                <figcaption>Application response to the NoSQL injection.</figcaption>
+            </figure>
+            <p><span class="under">Resolution</span>: I recommend that validation of the user input be performed to ensure that all query string fields are in fact the type of "string" rather than an object. If it is not a string, the error can be properly handled without executing the contents of the query and exposing user data.</p>
         </li>
     </ol>
     <h3>Conclusion</h3>
@@ -68,8 +80,7 @@
     <li><a href="http://www.veracode.com/security/xss">Cross-Site Scripting (XSS) Tutorial</a></li>
     <li><a href="https://www.owasp.org/index.php/Information_exposure_through_query_strings_in_url">Information exposure through query strings in url</a></li>
     <li><a href="https://cwe.mitre.org/data/definitions/598.html">CWE-598: Information Exposure Through Query Strings in GET Request</a></li>
-    
-    
-    
+    <li><a href="https://blog.sqreen.io/mongodb-will-not-prevent-nosql-injections-in-your-node-js-app/">MongoDB will not prevent NoSQL injections in your Node.js app</a></li>
+    <li><a href="https://blog.sqreen.io/prevent-nosql-injections-mongodb-node-js//">How to prevent NoSQL injections in MongoDB in a Node.js app</a></li>
 </body>
 </html>

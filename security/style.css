@@ -15,3 +15,7 @@ figcaption {
     font-style: italic;
     color: red;
 }
+
+.under {
+    text-decoration: underline;
+}
