@@ -17,7 +17,7 @@
     <li>Manual review of source code and subsequent "white box" testing of less obvious attacks</li>
     <li>Use of the curl tool for data transfer</li>
     <h3>Abstract of Findings</h3>
-    <br> <br> <br> <br> <br> <br> <!-- TEMP -->
+    <p> The issues I discovered in the application concerned data being input by the user or returned to the user. When a user is to input any data, it is important to validate the data to determine that it is formatted correctly for use in your application as well as ensure the user is not trying to insert data with the intent to compromise functionality of the application. When returning data to the user, the application owner holds the responsibility of making sure that the data of other users is kept safe and only accessed by the correct user themself, as well as making sure that the data of the current user is handled properly without the opportunity to be exposed. The application currently does not successfully achieve these goals, which leaves security vulnerabilities that must be resolved.</p>
     <h3>Issues Found</h3>
     <ol type="1">
         <li>
