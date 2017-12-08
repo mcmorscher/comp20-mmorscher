@@ -19,3 +19,8 @@ figcaption {
 .under {
     text-decoration: underline;
 }
+
+img {
+  max-width: 1000px;
+  max-height: auto;
+}
