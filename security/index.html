@@ -72,6 +72,18 @@
             </figure>
             <p><span class="under">Resolution</span>: I recommend that validation of the user input be performed to ensure that all query string fields are in fact the type of "string" rather than an object. If it is not a string, the error can be properly handled without executing the contents of the query and exposing user data.</p>
         </li>
+        <li>
+            <h4>Bad Programming Practice</h4>
+            <p><span class="under">Location</span>: index.js</p>
+            <p><span class="under">Severity</span>: High. The credentials exposed could allow a hacker to gain complete access to the database. </p>
+            <p><span class="under">Description</span>: Review of the source code revealed that it uses a hard-coded URI which contains the Heroku MongoDB username and MongoDB password among other details. This is obviously not only bad programming practice, but would allow anyone with access to the source code to be able to infiltrate the database. </p>
+            <p><span class="under">Documentation</span>:</p>
+            <figure>
+                <img src="Issue4.1.JPG" alt="Bad Programming Practice Documentation">
+                <figcaption>Code section showing hard-coded credentials (index.js:13-14)</figcaption>
+            </figure>
+            <p><span class="under">Resolution</span>: I recommend replacing the specific URI component with <code>'mongodb://localhost/[database_name]'</code> which does not expose any sensitive server details.</p>
+        </li>
     </ol>
     <h3>Conclusion</h3>
     <p>The security vulnerabilities outlined above can potentially destroy the intended functionality of the applications and expose sentitive user data if a malicious attacker were to exploit them. The recommended resolutions should be implemented immediately to fortify the application. </p>
@@ -82,5 +94,6 @@
     <li><a href="https://cwe.mitre.org/data/definitions/598.html">CWE-598: Information Exposure Through Query Strings in GET Request</a></li>
     <li><a href="https://blog.sqreen.io/mongodb-will-not-prevent-nosql-injections-in-your-node-js-app/">MongoDB will not prevent NoSQL injections in your Node.js app</a></li>
     <li><a href="https://blog.sqreen.io/prevent-nosql-injections-mongodb-node-js//">How to prevent NoSQL injections in MongoDB in a Node.js app</a></li>
+    <li><a href="https://cwe.mitre.org/data/definitions/798.html">CWE-798: Use of Hard-coded Credentials</a></li>
 </body>
 </html>
